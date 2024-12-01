@@ -2,7 +2,7 @@
 //  Item.swift
 //  RecipeApp2024
 //
-//  Created by McKinsey Hutchings on 11/14/24.
+//  Created by Madison Hutchings on 11/14/24.
 //
 
 import Foundation

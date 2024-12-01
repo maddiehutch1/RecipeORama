@@ -2,7 +2,7 @@
 //  ContentView.swift
 //  RecipeApp2024
 //
-//  Created by McKinsey Hutchings on 11/14/24.
+//  Created by Madison Hutchings on 11/14/24.
 //
 
 import SwiftUI
@@ -12,8 +12,16 @@ struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
     @Query private var items: [Item]
 
+    @State private var searchString: String = ""
+    
     var body: some View {
         NavigationSplitView {
+            List {
+                Text("Browse all recipes")
+                Text("Show favorites")
+                Text("Item three")
+            }
+        } content: {
             List {
                 ForEach(items) { item in
                     NavigationLink {
@@ -34,6 +42,7 @@ struct ContentView: View {
                     }
                 }
             }
+            .searchable(text: $searchString)
         } detail: {
             Text("Select an item")
         }
