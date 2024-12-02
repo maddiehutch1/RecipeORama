@@ -7,27 +7,32 @@
 
 import SwiftUI
 import SwiftData
+import MarkdownUI
 
 struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
-    @Query private var items: [Item]
+    @Query private var recipes: [Recipe]
 
     @State private var searchString: String = ""
     
     var body: some View {
         NavigationSplitView {
-            List {
-                Text("Browse all recipes")
-                Text("Show favorites")
-                Text("Item three")
+            NavigationLink {
+                Markdown("Browse all recipes")
+                Markdown("Show favorites")
+                Markdown("Item three")
+            } label: {
+                
             }
         } content: {
             List {
-                ForEach(items) { item in
+                ForEach(recipes) { recipe in
                     NavigationLink {
-                        Text("Item at \(item.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))")
+                        Markdown("Recipe at \(recipe.title)")
+                        Markdown(recipe.ingredients)
+                        Markdown(recipe.instructions)
                     } label: {
-                        Text(item.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))
+                        Markdown(recipe.title)
                     }
                 }
                 .onDelete(perform: deleteItems)
@@ -38,19 +43,19 @@ struct ContentView: View {
                 }
                 ToolbarItem {
                     Button(action: addItem) {
-                        Label("Add Item", systemImage: "plus")
+                        Label("Add Recipe", systemImage: "plus")
                     }
                 }
             }
             .searchable(text: $searchString)
         } detail: {
-            Text("Select an item")
+            Text("Select a recipe")
         }
     }
 
     private func addItem() {
         withAnimation {
-            let newItem = Item(timestamp: Date())
+            let newItem = Recipe(title: "Mac N Cheese", ingredients: "cheese, noodles, milk", instructions: "check this stuff out! Super tasty. yummy.")
             modelContext.insert(newItem)
         }
     }
@@ -58,7 +63,7 @@ struct ContentView: View {
     private func deleteItems(offsets: IndexSet) {
         withAnimation {
             for index in offsets {
-                modelContext.delete(items[index])
+                modelContext.delete(recipes[index])
             }
         }
     }
@@ -66,5 +71,5 @@ struct ContentView: View {
 
 #Preview {
     ContentView()
-        .modelContainer(for: Item.self, inMemory: true)
+        .modelContainer(for: Recipe.self, inMemory: true)
 }
