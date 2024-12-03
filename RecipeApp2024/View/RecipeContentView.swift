@@ -34,8 +34,7 @@ struct RecipeContentView: View {
                 } label: {
                     Text("Show favorites")
                 }
-            }
-            
+            }            
         } content: {
             recipesList(for: recipes)
         } detail: {
@@ -53,15 +52,28 @@ struct RecipeContentView: View {
                     Markdown(recipe.difficultyLevel)
                     Markdown(recipe.ingredients)
                     Markdown(recipe.instructions)
+                        .navigationBarItems(trailing:
+                            Button(action:
+                            {
+                                showEditSheet = true
+                                selectedRecipe = recipe
+                            })
+                            {
+                                Image(systemName: "pencil")
+                                Text("Edit Recipe")
+                            })
+                        .sheet(isPresented: $showEditSheet) {
+                            if let thisRecipe = selectedRecipe {
+                                EditRecipeSheet(recipe: thisRecipe, showSheet: $showEditSheet)
+                            }
+                        }
                 } label: {
                     Markdown(recipe.title)
                 }
-                .onTapGesture {
-                    showEditSheet = true
-                    selectedRecipe = recipe
-                }
+                
             }
             .onDelete(perform: deleteItems)
+            
         }
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
@@ -77,20 +89,8 @@ struct RecipeContentView: View {
         .sheet(isPresented: $showAddSheet) { // Attach the sheet modifier here
             AddRecipeSheet(showSheet: $showAddSheet)
         }
-        .sheet(isPresented: $showEditSheet) {
-            if let recipe = selectedRecipe {
-                EditRecipeSheet(recipe: recipe, showSheet: $showEditSheet)
-            }
-        }
+        
     }
-
-    
-//    private func addItem() {
-//        withAnimation {
-//            let newItem = Recipe(title: "stuff", ingredients: "stuff", instructions: "stuff", author: "stuff", date: Date(), servings: "stuff", tags: "stuff", difficultyLevel: "stuff", isFavorite: true)
-//            modelContext.insert(newItem)
-//        }
-//    }
 
     private func deleteItems(offsets: IndexSet) {
         withAnimation {

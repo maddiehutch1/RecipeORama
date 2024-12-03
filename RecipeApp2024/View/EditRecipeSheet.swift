@@ -13,6 +13,7 @@ struct EditRecipeSheet: View {
     
     @State private var recipe: Recipe
     
+    // provided by ChatGPT in order to pull the right recipe
     init(recipe: Recipe, showSheet: Binding<Bool>) {
             _recipe = State(initialValue: recipe)
             _showSheet = showSheet
