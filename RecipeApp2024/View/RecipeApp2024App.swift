@@ -15,7 +15,7 @@ struct RecipeApp2024App: App {
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            RecipeContentView()
         }
         .modelContainer(container) // have persistent items in my model container
        // .environment(viewModel)
