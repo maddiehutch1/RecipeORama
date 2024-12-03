@@ -15,9 +15,11 @@ struct RecipeContentView: View {
     
     @Query(filter: #Predicate<Recipe> { $0.isFavorite }) private var favoriteRecipes: [Recipe]
 
-    @State public var showSheet = false
+    @State public var showAddSheet = false
+    @State public var showEditSheet = false
     @State private var searchString: String = ""
-    
+    @State private var selectedRecipe: Recipe?
+
     var body: some View {
         NavigationSplitView {
             List {
@@ -44,7 +46,7 @@ struct RecipeContentView: View {
     // computed properties
     private func recipesList(for recipes: [Recipe]) -> some View {
         List {
-            ForEach(recipes) { recipe in
+            ForEach(recipes, id: \.self) { recipe in
                 NavigationLink {
                     Markdown("# \(recipe.title)")
                     Markdown(recipe.author)
@@ -54,6 +56,10 @@ struct RecipeContentView: View {
                 } label: {
                     Markdown(recipe.title)
                 }
+                .onTapGesture {
+                    showEditSheet = true
+                    selectedRecipe = recipe
+                }
             }
             .onDelete(perform: deleteItems)
         }
@@ -62,14 +68,19 @@ struct RecipeContentView: View {
                 EditButton()
             }
             ToolbarItem {
-                Button(action: { showSheet = true }) {
+                Button(action: { showAddSheet = true }) {
                     Label("Add Recipe", systemImage: "plus")
                 }
             }
         }
         .searchable(text: $searchString)
-        .sheet(isPresented: $showSheet) { // Attach the sheet modifier here
-            AddRecipeSheet(showSheet: $showSheet)
+        .sheet(isPresented: $showAddSheet) { // Attach the sheet modifier here
+            AddRecipeSheet(showSheet: $showAddSheet)
+        }
+        .sheet(isPresented: $showEditSheet) {
+            if let recipe = selectedRecipe {
+                EditRecipeSheet(recipe: recipe, showSheet: $showEditSheet)
+            }
         }
     }
 
