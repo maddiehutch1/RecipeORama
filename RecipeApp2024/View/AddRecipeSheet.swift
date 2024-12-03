@@ -10,6 +10,7 @@ import SwiftUI
 struct AddRecipeSheet: View {
     @Environment(\.modelContext) private var modelContext
     @State private var newRecipe = Recipe()
+    @Binding var showSheet: Bool
     
     var body: some View {
         NavigationStack {
@@ -37,13 +38,13 @@ struct AddRecipeSheet: View {
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button("Cancel") {
-                        //dismiss()
+                        dismiss()
                     }
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button("Save") {
                         addRecipe()
-                        //dismiss()
+                        dismiss()
                     }
                 }
             }
@@ -56,10 +57,14 @@ struct AddRecipeSheet: View {
         }
     }
     
+    private func dismiss() {
+        showSheet.toggle()
+    }
+    
 }
 
 
 
 #Preview {
-    AddRecipeSheet()
+    AddRecipeSheet(showSheet: .constant(true))
 }

@@ -15,7 +15,7 @@ struct RecipeContentView: View {
     
     @Query(filter: #Predicate<Recipe> { $0.isFavorite }) private var favoriteRecipes: [Recipe]
 
-    @State private var showSheet = false
+    @State public var showSheet = false
     @State private var searchString: String = ""
     
     var body: some View {
@@ -46,7 +46,9 @@ struct RecipeContentView: View {
         List {
             ForEach(recipes) { recipe in
                 NavigationLink {
-                    Markdown("Recipe at \(recipe.title)")
+                    Markdown("# \(recipe.title)")
+                    Markdown(recipe.author)
+                    Markdown(recipe.difficultyLevel)
                     Markdown(recipe.ingredients)
                     Markdown(recipe.instructions)
                 } label: {
@@ -67,7 +69,7 @@ struct RecipeContentView: View {
         }
         .searchable(text: $searchString)
         .sheet(isPresented: $showSheet) { // Attach the sheet modifier here
-            AddRecipeSheet()
+            AddRecipeSheet(showSheet: $showSheet)
         }
     }
 
